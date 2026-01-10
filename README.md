@@ -1,2 +1,931 @@
 # linebox-chat1
 LINE BOX Chat App
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LINE-BOX Chat - Masukkan Room ID</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2196F3 0%, #0D47A1 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #0D47A1;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .card {
+            background: #e3f2fd;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 5px solid #2196F3;
+            text-align: left;
+        }
+        
+        .card h3 {
+            color: #0D47A1;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #90caf9;
+        }
+        
+        .step:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .step-number {
+            background: #2196F3;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-right: 15px;
+            margin-top: 3px;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #0D47A1;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 18px 20px;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 18px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2196F3;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+        
+        input[type="text"] {
+            letter-spacing: 2px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 20px;
+            text-align: center;
+        }
+        
+        .room-input-container {
+            position: relative;
+            margin: 20px 0;
+        }
+        
+        .room-input-container input {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            padding: 20px;
+        }
+        
+        .room-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .room-action-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .room-action-btn.generate {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .room-action-btn.copy {
+            background: #FF9800;
+            color: white;
+        }
+        
+        .room-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        button {
+            background: linear-gradient(to right, #1565C0, #2196F3);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            margin-top: 20px;
+            letter-spacing: 1px;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(33, 150, 243, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(-1px);
+        }
+        
+        .qr-container {
+            margin: 30px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            border: 3px dashed #2196F3;
+        }
+        
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            background: linear-gradient(45deg, #2196F3, #0D47A1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .room-display {
+            background: #0D47A1;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            font-family: monospace;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .chat-container {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 800px;
+            height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            background: linear-gradient(to right, #0D47A1, #1565C0);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-header-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .room-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f5f5f5;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            max-width: 70%;
+            padding: 15px;
+            border-radius: 20px;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.sent {
+            background: #2196F3;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .message.received {
+            background: white;
+            color: #333;
+            margin-right: auto;
+            border: 1px solid #e0e0e0;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .message-sender {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            opacity: 0.9;
+        }
+        
+        .chat-input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 16px;
+        }
+        
+        .send-btn {
+            width: 120px;
+            margin: 0;
+            padding: 18px;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.3s;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .back-btn {
+            background: #757575;
+            width: auto;
+            padding: 15px 30px;
+            font-size: 16px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            input, select {
+                padding: 15px;
+                font-size: 16px;
+            }
+            
+            .room-input-container input {
+                font-size: 20px;
+            }
+            
+            button {
+                padding: 18px;
+                font-size: 18px;
+            }
+            
+            .qr-code {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOGIN SCREEN -->
+    <div class="container" id="loginScreen">
+        <h1>💬 LINE-BOX Chat</h1>
+        <div class="subtitle">Chat Antar HP - Masukkan Room ID yang Sama</div>
+        
+        <div class="card">
+            <h3>📱 Cara Pakai Multi-Device:</h3>
+            <div class="step">
+                <div class="step-number">1</div>
+                <div>
+                    <strong>HP 1 (Anda):</strong> Buat Room ID baru atau masukkan Room ID yang ada
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div>
+                    <strong>HP 2 (Teman):</strong> Masukkan <strong>Room ID yang sama persis</strong>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div>
+                    <strong>Pilih user berbeda</strong> di masing-masing HP
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div>
+                    <strong>Mulai chat!</strong> Pesan akan muncul di kedua HP
+                </div>
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <label>Room ID (WAJIB sama di kedua HP):</label>
+            <div class="room-input-container">
+                <input type="text" 
+                       id="roomIdInput" 
+                       placeholder="CONTOH: ABC123" 
+                       maxlength="6"
+                       style="text-transform: uppercase;">
+            </div>
+            <div class="room-actions">
+                <button class="room-action-btn generate" onclick="generateRoomId()">
+                    <span>🆕</span> Buat Baru
+                </button>
+                <button class="room-action-btn copy" onclick="copyRoomId()">
+                    <span>📋</span> Copy
+                </button>
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <label>Pilih User:</label>
+            <select id="userSelect" onchange="toggleNewUser()">
+                <option value="">-- Pilih User --</option>
+                <option value="syahlan">Syahlan</option>
+                <option value="sifani">Sifani</option>
+                <option value="ismi">Ismi</option>
+                <option value="sulis">Sulis</option>
+                <option value="new">Buat User Baru</option>
+            </select>
+        </div>
+        
+        <div class="input-group hidden" id="newUserGroup">
+            <label>Nama User Baru:</label>
+            <input type="text" id="newUserName" placeholder="Masukkan nama user baru">
+        </div>
+        
+        <div class="qr-container">
+            <div class="qr-code" id="qrCodeDisplay">
+                ROOM ID<br>DISINI
+            </div>
+            <div style="color: #666; font-size: 14px;">
+                Scan QR untuk buka di HP lain<br>
+                <strong id="currentRoomDisplay">-</strong>
+            </div>
+        </div>
+        
+        <button onclick="joinChat()" id="joinButton">
+            🚀 MASUK KE CHAT
+        </button>
+        
+        <div style="margin-top: 30px; color: #666; font-size: 14px; text-align: center;">
+            <strong>Tips:</strong> Kirim Room ID ke teman via WhatsApp atau screenshot QR Code
+        </div>
+    </div>
+    
+    <!-- CHAT SCREEN (Hidden Initially) -->
+    <div class="chat-container hidden" id="chatScreen">
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <h2 style="margin: 0; font-size: 24px;">💬 LINE-BOX Chat</h2>
+                <div class="room-badge" id="chatRoomBadge">Room: Loading...</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 20px; font-weight: bold;">
+                    👤 <span id="currentUserBadge">Loading...</span>
+                </div>
+                <button class="back-btn" onclick="leaveChat()">Keluar</button>
+            </div>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will appear here -->
+            <div style="text-align: center; padding: 40px 20px; color: #666;">
+                <div style="font-size: 48px; margin-bottom: 20px;">💬</div>
+                <h3 style="color: #0D47A1;">Selamat Datang di LINE-BOX!</h3>
+                <p>Mulai mengobrol dengan teman Anda...</p>
+            </div>
+        </div>
+        
+        <div class="chat-input-container">
+            <input type="text" 
+                   class="chat-input" 
+                   id="messageInput" 
+                   placeholder="Ketik pesan..."
+                   onkeypress="if(event.key === 'Enter') sendMessage()">
+            <button class="send-btn" onclick="sendMessage()">Kirim</button>
+        </div>
+    </div>
+    
+    <!-- NOTIFICATION -->
+    <div class="notification" id="notification"></div>
+    
+    <script>
+        // GLOBAL VARIABLES
+        let currentUser = null;
+        let currentRoomId = null;
+        let chatData = { messages: [], users: {} };
+        let lastUpdateTime = 0;
+        
+        // GENERATE SIMPLE ROOM ID (6 karakter)
+        function generateRoomId() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Tidak pakai 0,1,I,O untuk hindari confusion
+            let roomId = '';
+            for (let i = 0; i < 6; i++) {
+                roomId += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            
+            document.getElementById('roomIdInput').value = roomId;
+            document.getElementById('currentRoomDisplay').textContent = roomId;
+            updateQRCode(roomId);
+            
+            showNotification('Room ID baru dibuat: ' + roomId, 'success');
+        }
+        
+        // COPY ROOM ID TO CLIPBOARD
+        function copyRoomId() {
+            const roomId = document.getElementById('roomIdInput').value.trim();
+            if (!roomId) {
+                showNotification('Buat atau masukkan Room ID dulu!', 'error');
+                return;
+            }
+            
+            navigator.clipboard.writeText(roomId)
+                .then(() => showNotification('Room ID disalin! Kirim ke teman.', 'success'))
+                .catch(() => {
+                    // Fallback untuk browser lama
+                    const input = document.getElementById('roomIdInput');
+                    input.select();
+                    document.execCommand('copy');
+                    showNotification('Room ID disalin!', 'success');
+                });
+        }
+        
+        // UPDATE QR CODE DISPLAY
+        function updateQRCode(roomId) {
+            const qrDisplay = document.getElementById('qrCodeDisplay');
+            qrDisplay.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 32px; font-weight: bold; letter-spacing: 5px; margin-bottom: 10px;">
+                        ${roomId}
+                    </div>
+                    <div style="font-size: 12px; opacity: 0.8;">
+                        LINE-BOX<br>CHAT ROOM
+                    </div>
+                </div>
+            `;
+            document.getElementById('currentRoomDisplay').textContent = roomId;
+        }
+        
+        // TOGGLE NEW USER INPUT
+        function toggleNewUser() {
+            const select = document.getElementById('userSelect');
+            const newUserGroup = document.getElementById('newUserGroup');
+            
+            if (select.value === 'new') {
+                newUserGroup.classList.remove('hidden');
+            } else {
+                newUserGroup.classList.add('hidden');
+            }
+        }
+        
+        // JOIN CHAT
+        function joinChat() {
+            // Get Room ID
+            const roomIdInput = document.getElementById('roomIdInput').value.trim().toUpperCase();
+            if (!roomIdInput) {
+                showNotification('Masukkan Room ID terlebih dahulu!', 'error');
+                return;
+            }
+            
+            if (roomIdInput.length < 3) {
+                showNotification('Room ID minimal 3 karakter!', 'error');
+                return;
+            }
+            
+            // Get Username
+            let username = document.getElementById('userSelect').value;
+            if (username === 'new') {
+                username = document.getElementById('newUserName').value.trim();
+                if (!username) {
+                    showNotification('Masukkan nama user baru!', 'error');
+                    return;
+                }
+            }
+            
+            if (!username) {
+                showNotification('Pilih atau masukkan nama user!', 'error');
+                return;
+            }
+            
+            // Save to localStorage
+            currentRoomId = roomIdInput;
+            currentUser = username;
+            
+            localStorage.setItem('linebox_room_id', currentRoomId);
+            localStorage.setItem('linebox_username', currentUser);
+            
+            // Update UI
+            document.getElementById('chatRoomBadge').textContent = `Room: ${currentRoomId}`;
+            document.getElementById('currentUserBadge').textContent = currentUser;
+            
+            // Switch to chat screen
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('chatScreen').classList.remove('hidden');
+            
+            // Focus on message input
+            setTimeout(() => {
+                document.getElementById('messageInput').focus();
+            }, 300);
+            
+            // Load existing messages
+            loadChatData();
+            
+            // Add join message
+            addSystemMessage(`👋 ${currentUser} bergabung ke chat`);
+            
+            // Start auto-refresh
+            startAutoRefresh();
+            
+            showNotification(`Berhasil masuk ke Room: ${currentRoomId}`, 'success');
+        }
+        
+        // LOAD CHAT DATA FROM LOCALSTORAGE
+        function loadChatData() {
+            const storageKey = `linebox_chat_${currentRoomId}`;
+            const storedData = localStorage.getItem(storageKey);
+            
+            if (storedData) {
+                chatData = JSON.parse(storedData);
+            } else {
+                chatData = {
+                    messages: [],
+                    users: {},
+                    created: new Date().toISOString()
+                };
+            }
+            
+            // Update user activity
+            chatData.users[currentUser] = {
+                lastSeen: Date.now(),
+                device: getDeviceId()
+            };
+            
+            saveChatData();
+            renderMessages();
+        }
+        
+        // SAVE CHAT DATA TO LOCALSTORAGE
+        function saveChatData() {
+            const storageKey = `linebox_chat_${currentRoomId}`;
+            chatData.lastUpdate = Date.now();
+            localStorage.setItem(storageKey, JSON.stringify(chatData));
+            
+            // Trigger storage event for other tabs
+            sessionStorage.setItem(`linebox_update_${currentRoomId}`, Date.now());
+        }
+        
+        // GET UNIQUE DEVICE ID
+        function getDeviceId() {
+            let deviceId = localStorage.getItem('linebox_device_id');
+            if (!deviceId) {
+                deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('linebox_device_id', deviceId);
+            }
+            return deviceId;
+        }
+        
+        // RENDER MESSAGES
+        function renderMessages() {
+            const container = document.getElementById('chatMessages');
+            const messages = chatData.messages;
+            
+            if (messages.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: #666;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">💬</div>
+                        <h3 style="color: #0D47A1;">Selamat Datang di LINE-BOX!</h3>
+                        <p>Mulai mengobrol dengan teman Anda...</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            messages.forEach((msg, index) => {
+                const messageDiv = document.createElement('div');
+                const isCurrentUser = msg.sender === currentUser;
+                const isSystem = msg.sender === 'system';
+                
+                if (isSystem) {
+                    messageDiv.className = 'system-message';
+                    messageDiv.style.cssText = `
+                        text-align: center;
+                        color: #666;
+                        font-style: italic;
+                        margin: 10px 0;
+                        padding: 10px;
+                        background: #e3f2fd;
+                        border-radius: 10px;
+                        max-width: 80%;
+                        margin-left: auto;
+                        margin-right: auto;
+                    `;
+                    messageDiv.textContent = msg.text;
+                } else {
+                    messageDiv.className = `message ${isCurrentUser ? 'sent' : 'received'}`;
+                    messageDiv.innerHTML = `
+                        <div class="message-sender">${msg.sender}</div>
+                        <div style="margin: 8px 0;">${msg.text}</div>
+                        <div style="font-size: 11px; opacity: 0.7; text-align: right;">${msg.time || ''}</div>
+                    `;
+                }
+                
+                container.appendChild(messageDiv);
+            });
+            
+            // Scroll to bottom
+            setTimeout(() => {
+                container.scrollTop = container.scrollHeight;
+            }, 100);
+        }
+        
+        // SEND MESSAGE
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            
+            if (!text || !currentUser || !currentRoomId) return;
+            
+            // Create message object
+            const message = {
+                id: Date.now() + Math.random(),
+                sender: currentUser,
+                text: text,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                timestamp: Date.now()
+            };
+            
+            // Add to chat data
+            chatData.messages.push(message);
+            
+            // Update user activity
+            chatData.users[currentUser] = {
+                lastSeen: Date.now(),
+                device: getDeviceId()
+            };
+            
+            // Save and render
+            saveChatData();
+            renderMessages();
+            
+            // Clear input and focus
+            input.value = '';
+            input.focus();
+            
+            // Show notification
+            showNotification('Pesan terkirim!', 'success');
+        }
+        
+        // ADD SYSTEM MESSAGE
+        function addSystemMessage(text) {
+            const message = {
+                id: Date.now() + Math.random(),
+                sender: 'system',
+                text: text,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                timestamp: Date.now()
+            };
+            
+            chatData.messages.push(message);
+            saveChatData();
+            renderMessages();
+        }
+        
+        // START AUTO REFRESH
+        function startAutoRefresh() {
+            // Check for updates every 2 seconds
+            setInterval(() => {
+                const storageKey = `linebox_chat_${currentRoomId}`;
+                const storedData = localStorage.getItem(storageKey);
+                
+                if (storedData) {
+                    const newData = JSON.parse(storedData);
+                    if (newData.lastUpdate > lastUpdateTime) {
+                        chatData = newData;
+                        renderMessages();
+                        lastUpdateTime = newData.lastUpdate;
+                    }
+                }
+                
+                // Update user activity
+                if (chatData.users[currentUser]) {
+                    chatData.users[currentUser].lastSeen = Date.now();
+                    saveChatData();
+                }
+            }, 2000);
+        }
+        
+        // LEAVE CHAT
+        function leaveChat() {
+            if (confirm('Keluar dari chat?')) {
+                addSystemMessage(`👋 ${currentUser} keluar dari chat`);
+                
+                setTimeout(() => {
+                    // Reset
+                    currentUser = null;
+                    currentRoomId = null;
+                    
+                    // Show login screen
+                    document.getElementById('chatScreen').classList.add('hidden');
+                    document.getElementById('loginScreen').classList.remove('hidden');
+                    
+                    // Clear chat display
+                    document.getElementById('chatMessages').innerHTML = `
+                        <div style="text-align: center; padding: 40px 20px; color: #666;">
+                            <div style="font-size: 48px; margin-bottom: 20px;">💬</div>
+                            <h3 style="color: #0D47A1;">Selamat Datang di LINE-BOX!</h3>
+                            <p>Mulai mengobrol dengan teman Anda...</p>
+                        </div>
+                    `;
+                    
+                    showNotification('Anda telah keluar dari chat', 'info');
+                }, 500);
+            }
+        }
+        
+        // SHOW NOTIFICATION
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.background = type === 'success' ? '#4CAF50' : 
+                                           type === 'error' ? '#f44336' : '#2196F3';
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        // INITIALIZE ON LOAD
+        window.onload = function() {
+            // Generate initial room ID
+            generateRoomId();
+            
+            // Check for room ID in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlRoomId = urlParams.get('room');
+            
+            if (urlRoomId) {
+                document.getElementById('roomIdInput').value = urlRoomId.toUpperCase();
+                updateQRCode(urlRoomId.toUpperCase());
+            }
+            
+            // Check for saved login
+            const savedRoomId = localStorage.getItem('linebox_room_id');
+            const savedUsername = localStorage.getItem('linebox_username');
+            
+            if (savedRoomId && savedUsername) {
+                document.getElementById('roomIdInput').value = savedRoomId;
+                updateQRCode(savedRoomId);
+                
+                // Auto-select user if exists
+                const userSelect = document.getElementById('userSelect');
+                for (let i = 0; i < userSelect.options.length; i++) {
+                    if (userSelect.options[i].value === savedUsername) {
+                        userSelect.value = savedUsername;
+                        break;
+                    }
+                }
+                
+                showNotification(`Auto-login tersedia untuk Room: ${savedRoomId}`, 'info');
+            }
+            
+            // Listen for URL changes
+            window.addEventListener('popstate', function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const roomId = urlParams.get('room');
+                if (roomId) {
+                    document.getElementById('roomIdInput').value = roomId.toUpperCase();
+                    updateQRCode(roomId.toUpperCase());
+                }
+            });
+            
+            // Focus on room input
+            document.getElementById('roomIdInput').focus();
+        };
+        
+        // Listen for storage events (other tabs)
+        window.addEventListener('storage', function(e) {
+            if (e.key && e.key.startsWith('linebox_chat_') && currentRoomId) {
+                const roomId = e.key.replace('linebox_chat_', '');
+                if (roomId === currentRoomId) {
+                    loadChatData();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
